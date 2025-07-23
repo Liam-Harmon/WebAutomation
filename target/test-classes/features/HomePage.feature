@@ -1,10 +1,9 @@
 Feature: Home Page
 
-  Background: User Navigate To Portfolio Site
+  Background:
     Given user has opened portfolio site
-    When user enters valid username
-    And user enters valid password
-    When user clicks login button
+    Then user checks portfolio url
 
-  Scenario: Verify Portfolio Title
-    Then user validates portfolio title
+  Scenario: User Validates My Portfolio Logo
+    When user clicks on My Portfolio Logo
+    Then user checks portfolio url

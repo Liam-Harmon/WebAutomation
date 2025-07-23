@@ -66,4 +66,9 @@ public class ElementUtil {
             e.printStackTrace();
         }
     }
+
+    // Get Page URL
+    public String fetchPageURL(){
+        return driver.getCurrentUrl();
+    }
 }
