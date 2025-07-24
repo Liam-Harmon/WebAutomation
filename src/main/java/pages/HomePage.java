@@ -21,16 +21,27 @@ public class HomePage {
     private final By myPortfolioLogo = By.xpath("//a[@class='navbar-brand']");
 
     // Methods and Actions
-    public String getPageURL(){
-        WebLogger.info("Fetch Page URL");
+
+    public String getPageURL() {
         elementUtil.delay(Constants.TINY_WAIT);
-        return elementUtil.fetchPageURL();
+        try {
+            String url = elementUtil.fetchPageURL();
+            WebLogger.pass("Fetched Page URL: " + url);
+            return url;
+        } catch (Exception e) {
+            WebLogger.fail("Failed to fetch Page URL: " + e.getMessage());
+            throw e;
+        }
     }
 
-    public void clickMyPortfolioLogo(){
-        WebLogger.info("Clicking My Portfolio Logo");
+    public void clickMyPortfolioLogo() {
         elementUtil.delay(Constants.TINY_WAIT);
-        elementUtil.doClick(myPortfolioLogo);
+        try {
+            elementUtil.doClick(myPortfolioLogo);
+            WebLogger.pass("Clicked My Portfolio Logo successfully");
+        } catch (Exception e) {
+            WebLogger.fail("Failed to click My Portfolio Logo: " + e.getMessage());
+            throw e;
+        }
     }
 }
-

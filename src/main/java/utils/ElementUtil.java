@@ -23,10 +23,20 @@ public class ElementUtil {
     }
 
     // Send keys to element
-    public void doSendKeys(By locator, String text) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).clear();
-        driver.findElement(locator).sendKeys(text);
+    public void doSendKeysCharByChar(By locator, String text) {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        element.clear();
+        for (char c : text.toCharArray()) {
+            element.sendKeys(String.valueOf(c));
+            try {
+                Thread.sleep(100); // small delay between keystrokes to mimic user typing
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // restore interrupt status
+            }
+        }
     }
+
+    // Send Char
 
     // Get text
     public String doGetText(By locator) {

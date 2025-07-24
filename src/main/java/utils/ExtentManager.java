@@ -3,12 +3,7 @@ package utils;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
-import factory.DriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -35,8 +30,6 @@ public class ExtentManager {
             htmlReporter.config().setReportName("Web Test Results");
             htmlReporter.config().setTheme(Theme.STANDARD);
 
-            String driverVersion = WebDriverManager.chromedriver().getDownloadedDriverVersion();
-
             extent = new ExtentReports();
             extent.attachReporter(htmlReporter);
             extent.setSystemInfo("OS", System.getProperty("os.name"));
@@ -59,10 +52,10 @@ public class ExtentManager {
             Process process = new ProcessBuilder(chromeDriverPath, "--version").start();
             try (Scanner scanner = new Scanner(process.getInputStream())) {
                 if (scanner.hasNextLine()) {
-                    String versionLine = scanner.nextLine(); // e.g., "ChromeDriver 138.0.7204.168 (...)"
+                    String versionLine = scanner.nextLine();
                     String[] parts = versionLine.split(" ");
                     if (parts.length >= 2) {
-                        return parts[1].trim(); // This will be "138.0.7204.168"
+                        return parts[1].trim();
                     }
                 }
             }

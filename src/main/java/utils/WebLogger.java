@@ -1,31 +1,27 @@
 package utils;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.aventstack.extentreports.Status;
 
 public class WebLogger {
 
-    private static final Logger logger = Logger.getLogger(WebLogger.class.getName());
+    public static void pass(String message) {
+        ExtentTestManager.getTest().log(Status.PASS, message);
+    }
 
-    static {
-        logger.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.INFO);
-        logger.addHandler(handler);
-        logger.setLevel(Level.INFO);
+    public static void fail(String message) {
+        ExtentTestManager.getTest().log(Status.FAIL, message);
     }
 
     public static void info(String message) {
-        logger.info(message);
+        ExtentTestManager.getTest().log(Status.INFO, message);
     }
 
-    public static void warn(String message) {
-        logger.warning(message);
-    }
-
-    public static void error(String message) {
-        logger.severe(message);
+    public static void attachScreenshot(String path) {
+        try {
+            ExtentTestManager.getTest().addScreenCaptureFromPath(path);
+        } catch (Exception e) {
+            fail("Failed to attach screenshot: " + e.getMessage());
+        }
     }
 }
 

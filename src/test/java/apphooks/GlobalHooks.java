@@ -9,6 +9,11 @@ import factory.DriverFactory;
 import utils.ConfigReader;
 import utils.ExtentTestManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class GlobalHooks {
 
     @Before
@@ -24,25 +29,27 @@ public class GlobalHooks {
 
         if (scenario.isFailed()) {
             byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            ExtentTestManager.getTest().log(Status.FAIL, "Scenario Failed");
-            ExtentTestManager.getTest().addScreenCaptureFromPath(captureScreenshot(screenshot, scenario.getName()));
-            ExtentTestManager.getTest().fail(scenario.getName());
+            String screenshotPath = captureScreenshot(screenshot, scenario.getName());
+
+            ExtentTestManager.getTest().log(Status.FAIL, "Scenario Failed: " + scenario.getName());
+            if (screenshotPath != null) {
+                ExtentTestManager.getTest().addScreenCaptureFromPath(screenshotPath);
+            }
         } else {
-            ExtentTestManager.getTest().log(Status.PASS, "Scenario Passed");
+            ExtentTestManager.getTest().log(Status.PASS, "Scenario Passed: " + scenario.getName());
         }
 
-        ExtentTestManager.endTest();
         DriverFactory.quitDriver();
+        ExtentTestManager.flush(); // Important to flush after every scenario
     }
 
     private String captureScreenshot(byte[] screenshot, String screenshotName) {
+        String path = "target/screenshots/" + screenshotName.replaceAll(" ", "_") + ".png";
         try {
-            String path = "target/screenshots/" + screenshotName + ".png";
-            java.nio.file.Path dest = java.nio.file.Paths.get(path);
-            java.nio.file.Files.createDirectories(dest.getParent());
-            java.nio.file.Files.write(dest, screenshot);
+            Files.createDirectories(Paths.get("target/screenshots/"));
+            Files.write(Paths.get(path), screenshot);
             return path;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
